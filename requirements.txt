@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-dotenv
+httpx
+requests
+firebase-admin
+deepface
+opencv-python
+mediapipe
+numpy
+pillow
+tf-keras
