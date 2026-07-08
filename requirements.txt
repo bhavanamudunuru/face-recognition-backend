@@ -5,7 +5,7 @@ httpx
 requests
 firebase-admin
 deepface
-opencv-python
+opencv-python-headless
 mediapipe
 numpy
 pillow
