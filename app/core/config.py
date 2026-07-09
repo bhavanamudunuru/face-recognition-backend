@@ -31,7 +31,11 @@ FACE_MODEL = "FaceNet512"
 FACE_DETECTOR = "retinaface"
 
 # CORS
-ALLOWED_ORIGINS = ["http://localhost:3000", "http://localhost:3001"]
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://face-recognition-frontend-chi.vercel.app",
+]
 
 # Firestore collections
 COLLECTION_USERS = "users"
