@@ -24,14 +24,18 @@ FIREBASE_CERT = {
 
 # Face recognition settings
 FACE_MATCH_THRESHOLD = 0.70
-BLUR_THRESHOLD = 100.0
+BLUR_THRESHOLD = 50.0
 BRIGHTNESS_MIN = 40
 BRIGHTNESS_MAX = 240
 FACE_MODEL = "FaceNet512"
 FACE_DETECTOR = "retinaface"
 
 # CORS
-ALLOWED_ORIGINS = ["http://localhost:3000", "http://localhost:3001"]
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://face-recognition-frontend-chi.vercel.app",
+]
 
 # Firestore collections
 COLLECTION_USERS = "users"
