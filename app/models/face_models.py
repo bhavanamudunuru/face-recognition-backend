@@ -9,12 +9,12 @@ from typing import Optional
 
 class RegisterFaceRequest(BaseModel):
     user_id: str
-    image_url: str
+    image_base64: str
 
 
 class VerifyFaceRequest(BaseModel):
     user_id: str
-    image_url: str
+    image_base64: str
 
 
 class FaceResult(BaseModel):
