@@ -70,7 +70,7 @@ async def verify_user_face(body: VerifyFaceRequest):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Verification error for {body.user_id}: {e}")
+        logger.error(f"Verification error for {body.user_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Verification failed: {str(e)}")
     finally:
         for path in [scanned_path, registered_path]:
