@@ -63,3 +63,27 @@ def check_image_quality(image_path: str) -> dict:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Blur check
+    blur_score = cv2.Laplacian(gray, cv2.CV_64F).var()
+    if blur_score < BLUR_THRESHOLD:
+        logger.warning(f"Image too blurry: score={blur_score:.2f}")
+        return {"passed": False, "reason": f"Image is too blurry (score: {blur_score:.1f}). Please retake in better lighting."}
+
+    # Brightness check
+    brightness = np.mean(gray)
+    if brightness < BRIGHTNESS_MIN:
+        return {"passed": False, "reason": "Image is too dark. Please retake in better lighting."}
+    if brightness > BRIGHTNESS_MAX:
+        return {"passed": False, "reason": "Image is overexposed (too bright). Please retake."}
+
+    # Face detection using OpenCV Haar Cascade
+    face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
+    if face_cascade.empty():
+        raise RuntimeError(f"Failed to load Haar Cascade classifier from {CASCADE_PATH}")
+
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(80, 80))
+    if len(faces) == 0:
+        return {"passed": False, "reason": "No face detected in the image. Please face the camera directly."}
+    if len(faces) > 1:
+        return {"passed": False, "reason": "Multiple faces detected. Only one person should be in the frame."}
+
+    return {"passed": True, "reason": None}
