@@ -67,7 +67,7 @@ async def register_face(body: RegisterFaceRequest):
         )
 
     except Exception as e:
-        logger.error(f"Registration error for {body.user_id}: {e}")
+        logger.error(f"Registration error for {body.user_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
     finally:
         if image_path and os.path.exists(image_path):
