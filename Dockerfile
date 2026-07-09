@@ -9,10 +9,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrender1 \
     libxext6 \
     libsm6 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p /usr/local/lib/python3.11/site-packages/cv2/data && \
+    curl -o /usr/local/lib/python3.11/site-packages/cv2/data/haarcascade_frontalface_default.xml \
+    https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml
 
 COPY . .
 
