@@ -8,7 +8,7 @@ Runs quality check, detection, liveness, and duplicate check before saving.
 import os
 from fastapi import APIRouter, HTTPException
 from app.models.face_models import RegisterFaceRequest, FaceResult
-from app.utils.image_utils import download_image, check_image_quality
+from app.utils.image_utils import decode_base64_image, check_image_quality
 from app.services.face_detection import detect_face
 from app.services.liveness_detection import check_liveness
 from app.services.duplicate_detection import check_for_duplicate
@@ -22,14 +22,14 @@ router = APIRouter(prefix="/api", tags=["Registration"])
 async def register_face(body: RegisterFaceRequest):
     """
     Registers a new user face.
-    Steps: download image -> quality check -> face detection -> liveness -> duplicate check -> save
+    Steps: decode image -> quality check -> face detection -> liveness -> duplicate check -> save
     """
     image_path = None
     try:
         logger.info(f"Registration started for user: {body.user_id}")
 
-        # Step 1 — Download image from Firebase Storage URL
-        image_path = download_image(body.image_url)
+        # Step 1 — Decode base64 image
+        image_path = decode_base64_image(body.image_base64)
 
         # Step 2 — Image quality check
         quality = check_image_quality(image_path)
@@ -50,7 +50,7 @@ async def register_face(body: RegisterFaceRequest):
         all_users = get_all_users()
         duplicate = check_for_duplicate(image_path, all_users, body.user_id)
         if duplicate["is_duplicate"]:
-            save_duplicate_record(body.user_id, duplicate["duplicate_user_id"], body.image_url)
+            save_duplicate_record(body.user_id, duplicate["duplicate_user_id"])
             return FaceResult(
                 status="duplicate",
                 message=f"This face is already registered under another account.",
@@ -58,7 +58,7 @@ async def register_face(body: RegisterFaceRequest):
             )
 
         # Step 6 — Save user registration
-        register_user(body.user_id, body.image_url)
+        register_user(body.user_id, body.image_base64)
 
         return FaceResult(
             status="registered",

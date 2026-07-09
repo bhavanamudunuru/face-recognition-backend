@@ -26,6 +26,20 @@ def download_image(image_url: str) -> str:
     tmp.write(response.content)
     tmp.close()
     return tmp.name
+import base64
+
+def decode_base64_image(base64_data: str) -> str:
+    """
+    Decodes a base64 data URL (e.g. 'data:image/jpeg;base64,...') and saves it to a temp file.
+    Returns the local file path.
+    """
+    if "," in base64_data:
+        base64_data = base64_data.split(",", 1)[1]
+    image_bytes = base64.b64decode(base64_data)
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+    tmp.write(image_bytes)
+    tmp.close()
+    return tmp.name
 
 
 def check_image_quality(image_path: str) -> dict:
